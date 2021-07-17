@@ -1,20 +1,37 @@
 package com.example.employee.models;
 
-import lombok.Builder;
+import com.example.employee.validator.EmployeeAge;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.keyvalue.annotation.KeySpace;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
-@KeySpace("employees")
 @Getter
 @Setter
+@Table(name = "employee")
+@Entity
 public class Employee {
-    private static final AtomicInteger count = new AtomicInteger(1);
-
     @Id
-    private Integer id = count.addAndGet(1);
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_sequence")
+    @SequenceGenerator(name = "employee_sequence", sequenceName = "employee_id_seq", allocationSize = 1)
+    private Integer id;
+
+    @NotNull
+    @NotBlank
     private String name;
+
+    @EmployeeAge
+    @NotNull(message = "Provide date of birth")
+    private Date dateOfBirth;
+
+    private String gender;
+
+    private Double salary;
+
+    private String department;
+
+
 }
